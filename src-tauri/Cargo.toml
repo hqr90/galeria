@@ -1,0 +1,33 @@
+[package]
+name = "framecast"
+version = "0.1.0"
+description = "Galeria de arte cinematica para monitores secundarios"
+authors = ["Hilton Queiroz Rebello"]
+edition = "2021"
+
+[lib]
+name = "framecast_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+walkdir = "2"
+
+# Tamanho fisico da tela em mm, para o DPI real. O GDI ja corrige a rotacao,
+# ao contrario do EDID bruto, que reporta sempre o painel deitado.
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = ["Win32_Foundation", "Win32_Graphics_Gdi"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true
